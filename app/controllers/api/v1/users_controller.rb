@@ -1,7 +1,7 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :set_user, only: %i[show update]
+      before_action :set_user, only: %i[show update destroy]
 
       def index
         @users = User.all
@@ -27,6 +27,14 @@ module Api
           render json: @user, status: :ok
         else
           render json: @user.errors, status: :unprocessable_entity
+        end
+      end
+
+      def destroy
+        if @user&.destroy
+          head :no_content
+        else
+          render json: { error: 'User not found' }, status: :not_found
         end
       end
 
